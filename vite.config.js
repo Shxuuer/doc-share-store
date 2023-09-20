@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from 'node:url'
 
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import urls from './src/consts/urls.js'
 export default defineConfig({
   plugins: [
     vue()
@@ -15,7 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: urls.server,
+        target: 'http://localhost:3000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       }

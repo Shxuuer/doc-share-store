@@ -1,7 +1,7 @@
-import path from 'path'
-import config from '../../config.js'
-import fs, { readdirSync } from 'fs'
 import { checkPath } from '../../public/index.js'
+import config from '../../config.js'
+import path from 'path'
+import fs, { readdirSync } from 'fs'
 
 /**
  * 文件遍历方法

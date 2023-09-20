@@ -2,8 +2,7 @@
 import { HomeOutlined, DownloadOutlined, EyeOutlined, CloseCircleFilled } from '@ant-design/icons-vue'
 import FileName from '../components/FilesView/FileName.vue'
 import show from '@/components/notification.js'
-import { saveAs } from 'file-saver'
-import { parseMemorySize } from '@/public/index.js'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'FilesView',
@@ -36,16 +35,7 @@ export default {
       curFileName: '',
       selectedRowKeys: [],
       filesData: [],
-      currentPath: '/',
-      downloadingInfo: {
-        downloading: false,
-        fileName: '无进行中任务',
-        fileSize: '0B',
-        downloadedSize: '0B',
-        downloadSpeed: '0B/s',
-        downloadPercent: 0
-      },
-      axiosController: new AbortController()
+      currentPath: '/'
     }
   },
   methods: {
@@ -88,14 +78,16 @@ export default {
       this.currentPath = currentPath
     },
     previewFile (target) {
-      show('提示', '预览功能正在开发中')
+      this.$router.push({
+        name: 'preview'
+      })
+      this.$store.commit('setPreviewPath', `${this.currentPath}${target}`)
     },
     async downloadFile (target) {
-      if (this.downloadingInfo.downloading) {
-        show('警告', '当前有任务正在进行中，请等待任务完成')
+      if (this.$store.state.ua.isWechat) {
+        message.warn('微信浏览器不支持下载文件，请点击右上角选择其他浏览器')
         return
       }
-
       if (target === undefined) {
         target = []
         this.selectedRowKeys.forEach(item => {
@@ -106,48 +98,11 @@ export default {
           })
         })
       }
-
-      this.downloadingInfo.downloading = true
-      show('下载开始', '下载已经开始，如果文件较大，浏览器可能会崩溃')
-      this.downloadingInfo.fileName = '压缩文件中'
-      this.downloadingInfo.fileSize = '0B'
-      this.downloadingInfo.downloadedSize = '0B'
-      this.downloadingInfo.downloadSpeed = '0B/s'
-      this.downloadingInfo.downloadPercent = 0
-
-      await this.$axios({
-        url: '/download',
-        method: 'post',
-        data: {
-          files: target,
-          filePath: this.currentPath
-        },
-        responseType: 'blob',
-        onDownloadProgress: progressEvent => {
-          this.downloadingInfo.fileName = target[0].name
-          this.downloadingInfo.fileSize = parseMemorySize(progressEvent.total)
-          this.downloadingInfo.downloadPercent = Number((progressEvent.loaded / progressEvent.total * 100).toFixed(0))
-          this.downloadingInfo.downloadedSize = parseMemorySize(progressEvent.loaded)
-          this.downloadingInfo.downloadSpeed = parseMemorySize(progressEvent.rate) + '/s'
-        },
-        signal: this.axiosController.signal
-      }).then(res => {
-        this.downloadingInfo.downloading = false
-        const fileName = decodeURI(res.headers['content-disposition'].split(';')[1].split('=')[1].replaceAll('"', ''))
-        const blob = new Blob([res.data])
-        saveAs(blob, fileName)
-      }).catch((e) => {
-        if (e.message === 'canceled') {
-          show('提示', '下载已取消')
-          return
-        }
-        show('警告', '下载失败，请联系开发者')
+      this.$store.commit('downloadFile', {
+        files: target,
+        filePath: this.currentPath
       })
-    },
-    cancelDownload () {
-      this.axiosController.abort()
-      this.downloadingInfo.downloading = false
-      this.axiosController = new AbortController()
+      this.$router.push('/download')
     }
   },
   mounted () {
@@ -169,17 +124,6 @@ export default {
 <template>
   <a-page-header style="border: 1px solid rgb(235, 237, 240);background-color:#eee;" title="文件库"/>
   <a-row class="main">
-    <a-row class="main-progress">
-      <a-row>当前任务：<span style="font-weight: bold">{{ downloadingInfo.fileName }}</span></a-row>
-      <div class="progress-show">
-        <a-progress :percent="downloadingInfo.downloadPercent"/>
-        <CloseCircleFilled v-if="downloadingInfo.downloading" @click="cancelDownload" style="color: red;position: relative;top: -2px"/>
-      </div>
-      <a-row>
-        <a-col>进度： {{ downloadingInfo.fileSize }} / {{ downloadingInfo.downloadedSize }}</a-col>
-        <a-col style="margin-left: 30px">下载速度：{{ downloadingInfo.downloadSpeed }}</a-col>
-      </a-row>
-    </a-row>
     <a-row class="main-opera">
       <a-button type="primary" class="opera-button" :disabled="selectedRowKeys.length === 0" @click="downloadFile()">
         下载
@@ -246,7 +190,7 @@ export default {
 }
 
 .opera-button {
-  margin-left: 40px;
+  margin-left: 20px;
   width: 90px;
   height: 40px;
 }

@@ -1,7 +1,9 @@
 import express from 'express'
 import fileRouter from './routers/file/index.js'
 import downloadRouter from './routers/download/index.js'
+import previewRouter from './routers/preview/index.js'
 import bodyParser from 'body-parser'
+
 const app = express()
 
 app.use(bodyParser.json())
@@ -11,5 +13,6 @@ app.use(express.static('files'))
 
 fileRouter(app)
 downloadRouter(app)
+previewRouter(app)
 
 app.listen(3000)

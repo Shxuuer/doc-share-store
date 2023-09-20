@@ -7,8 +7,23 @@ const routes = [
   },
   {
     path: '/files',
-    name: 'Files',
+    name: 'files',
     component: () => import('../views/FilesView.vue')
+  },
+  {
+    path: '/download',
+    name: 'download',
+    component: () => import('../views/DownloadList.vue')
+  },
+  {
+    path: '/info',
+    name: 'info',
+    component: () => import('../views/InfoView.vue')
+  },
+  {
+    path: '/preview',
+    name: 'preview',
+    component: () => import('../views/PreviewView.vue')
   }
 ]
 
