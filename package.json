@@ -22,11 +22,14 @@
     "express": "^4.18.2",
     "file-saver": "^2.0.5",
     "fs": "^0.0.1-security",
+    "jszip": "^3.10.1",
     "node-uuid": "^1.4.8",
     "nodemon": "^3.0.1",
     "path": "^0.12.7",
     "vue": "^3.3.4",
+    "vue-pdf-embed": "^1.1.6",
     "vue-router": "^4.2.4",
+    "vue3-pdfjs": "^0.1.6",
     "vuex": "^4.1.0"
   },
   "devDependencies": {
