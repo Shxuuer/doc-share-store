@@ -1,13 +1,12 @@
 <script>
-import { HomeOutlined, DownloadOutlined, EyeOutlined, CloseCircleFilled } from '@ant-design/icons-vue'
+import { HomeOutlined, DownloadOutlined, EyeOutlined } from '@ant-design/icons-vue'
 import FileName from '../components/FilesView/FileName.vue'
-import show from '@/components/notification.js'
 import { message } from 'ant-design-vue'
 
 export default {
   name: 'FilesView',
   components: {
-    HomeOutlined, FileName, DownloadOutlined, EyeOutlined, CloseCircleFilled
+    HomeOutlined, FileName, DownloadOutlined, EyeOutlined
   },
   inject: ['$axios'],
   data () {
@@ -79,7 +78,10 @@ export default {
     },
     previewFile (target) {
       this.$router.push({
-        name: 'preview'
+        name: 'preview',
+        query: {
+          previewPath: `${this.currentPath}${target}`
+        }
       })
       this.$store.commit('setPreviewPath', `${this.currentPath}${target}`)
     },

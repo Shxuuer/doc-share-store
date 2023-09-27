@@ -28,6 +28,7 @@ const routes = [
 ]
 
 export default createRouter({
+  base: '/',
   history: createWebHashHistory(),
   routes
 })

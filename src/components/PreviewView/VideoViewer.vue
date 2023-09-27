@@ -7,7 +7,7 @@ export default {
 
 <template>
   <div class="viewer" style="display: flex;align-items: center;justify-content: center">
-    <video :src="url" controls autoplay style="max-width: 100%;max-height: 100%"></video>
+    <video :src="url" controls style="max-width: 100%;max-height: 100%"></video>
   </div>
 </template>
 

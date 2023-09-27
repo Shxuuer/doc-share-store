@@ -23,7 +23,9 @@ export default {
     }
   },
   beforeMount () {
-    this.filePath = this.$store.state.previewPath
+    this.filePath = this.$route.query.previewPath || this.$store.state.previewPath
+    this.$store.commit('setPreviewPath', this.filePath)
+    this.$router.push({ query: { previewPath: this.filePath, ...this.$route.query }, replace: true })
     this.url = `/api/preview?filePath=${this.filePath}`
   },
   computed: {
@@ -34,8 +36,6 @@ export default {
       }
       return ''
     }
-  },
-  methods: {
   }
 }
 </script>
@@ -60,7 +60,7 @@ export default {
   margin: 10px auto auto 15px;
 }
 .viewer {
-  width: 100%;
+  width: calc(100vw - 80px);
   height: calc(100vh - 82px);
 }
 </style>
