@@ -26,7 +26,8 @@ export default createStore({
       await solveDownloadList(info).then(res => {
         info = res
       })
-      const fileName = (info.files.length > 1 ? `1 / ${info.files.length}:` : '') + info.files[0]
+
+      const fileName = (info.files.length > 1 ? `(文件包 1/${info.files.length}): ` : '') + info.files[0]
       show('提示', `${info.files.length > 1 ? `文件包共${info.files.length}个文件` : `${info.files[0]}`} 开始下载`)
       state.downloadInfo.downloadList.push({
         fileName,
@@ -58,10 +59,19 @@ export default createStore({
         }).then(res => {
           blobList.push(res.data)
           if (info.files.length > 1 && blobList.length < info.files.length) {
-            currentDownloadInfo.fileName = `${blobList.length + 1} / ${info.files.length}: ${info.files[blobList.length]}`
+            currentDownloadInfo.fileName = `(文件包 ${blobList.length + 1}/${info.files.length}): ${info.files[blobList.length]}`
+          }
+        }).catch(err => {
+          if (err.message === 'canceled') {
+            currentDownloadInfo.status = 'canceled'
+          } else {
+            currentDownloadInfo.status = 'error'
+            show('错误', `下载 ${file} 时出错`)
+            currentDownloadInfo.status = 'error'
           }
         })
       }
+      if (currentDownloadInfo.status !== 'downloading') return
       currentDownloadInfo.fileName = `${info.files.length}个文件压缩中`
       if (info.files.length === 1) {
         const blob = new Blob(blobList)
