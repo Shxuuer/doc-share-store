@@ -6,7 +6,7 @@ import fs from 'fs'
 function preview (filePath, req, res) {
   if (!checkPath(filePath)) return []
   filePath = path.join(config.filePath, filePath)
-  let readStream = null
+  let readStream
   if (req.headers.range) {
     const fileSize = fs.statSync(filePath).size
     const range = req.headers.range.replace(/bytes=/, '').split('-')

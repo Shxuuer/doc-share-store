@@ -204,15 +204,6 @@ export default {
   align-items: center;
 }
 
-.main-progress {
-  margin-top: 20px;
-  width: 50%;
-  margin-left: 20px;
-  margin-bottom: 5px;
-  display: flex;
-  flex-direction: column;
-}
-
 .main-table {
   width: 100%;
 }
@@ -233,10 +224,4 @@ export default {
   transition: 0.5s;
 }
 
-.progress-show {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-}
 </style>

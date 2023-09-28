@@ -121,13 +121,4 @@ export default {
   transform: translateX(-50%);
 }
 
-.page-tool-item {
-  padding: 8px 15px 8px 10px;
-  cursor: pointer;
-}
-
-.page-tool-item:hover {
-  background: rgb(100, 100, 100);
-}
-
 </style>
